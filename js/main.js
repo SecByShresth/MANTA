@@ -71,11 +71,11 @@ class MalwareAnalyzer {
     }
 
     async handleFileSelect(file) {
-        // File size limit: 50MB for client-side analysis
-        const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+        // File size limit: 200MB for production malware analysis
+        const MAX_FILE_SIZE = 200 * 1024 * 1024; // 200MB
 
         if (file.size > MAX_FILE_SIZE) {
-            alert(`File too large! Maximum size is 50MB.\nYour file: ${ReportGenerator.formatBytes(file.size)}\n\nFor larger files, use backend analysis only.`);
+            alert(`File too large! Maximum size is 200MB.\nYour file: ${ReportGenerator.formatBytes(file.size)}\n\nFor larger files, use backend analysis only.`);
             return;
         }
 
@@ -105,9 +105,9 @@ class MalwareAnalyzer {
         if (!this.currentFile) return;
 
         // File size check
-        const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+        const MAX_FILE_SIZE = 200 * 1024 * 1024; // 200MB
         if (this.currentFile.size > MAX_FILE_SIZE) {
-            alert('File too large for client-side analysis. Maximum size: 50MB');
+            alert('File too large for client-side analysis. Maximum size: 200MB');
             return;
         }
 
@@ -541,13 +541,9 @@ class MalwareAnalyzer {
         );
     }
 
-    exportPDF() {
-        const text = ReportGenerator.generateTextReport(this.analysisData);
-        ReportGenerator.downloadFile(
-            text,
-            `malware-analysis-${this.analysisData.fileInfo.name}.txt`,
-            'text/plain'
-        );
+    async exportPDF() {
+        const pdf = await ReportGenerator.generatePDF(this.analysisData);
+        pdf.save(`malware-analysis-${this.analysisData.fileInfo.name}.pdf`);
     }
 
     reset() {

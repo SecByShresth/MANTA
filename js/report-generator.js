@@ -138,12 +138,201 @@ class ReportGenerator {
     }
 
     static async generatePDF(analysisData) {
-        // For PDF generation, we'll use jsPDF
-        // This is a placeholder - you'll need to include jsPDF library
+        // Use jsPDF for proper PDF generation
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
 
-        // For now, we'll create a simple text-based PDF alternative
-        const text = this.generateTextReport(analysisData);
-        return text;
+        const { fileInfo, hashes, clientAnalysis, backendAnalysis } = analysisData;
+
+        let y = 20; // Current Y position
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const margin = 20;
+        const maxWidth = pageWidth - (margin * 2);
+
+        // Title
+        doc.setFontSize(20);
+        doc.setTextColor(99, 102, 241);
+        doc.text('Malware Analysis Report', margin, y);
+        y += 10;
+
+        // Date
+        doc.setFontSize(10);
+        doc.setTextColor(107, 114, 128);
+        doc.text(`Generated: ${new Date().toLocaleString()}`, margin, y);
+        y += 15;
+
+        // File Information
+        doc.setFontSize(14);
+        doc.setTextColor(79, 70, 229);
+        doc.text('File Information', margin, y);
+        y += 8;
+
+        doc.setFontSize(10);
+        doc.setTextColor(0, 0, 0);
+        doc.text(`File Name: ${fileInfo.name}`, margin, y);
+        y += 6;
+        doc.text(`File Size: ${this.formatBytes(fileInfo.size)}`, margin, y);
+        y += 6;
+        doc.text(`File Type: ${fileInfo.type || 'Unknown'}`, margin, y);
+        y += 12;
+
+        // Hashes
+        doc.setFontSize(14);
+        doc.setTextColor(79, 70, 229);
+        doc.text('Hashes', margin, y);
+        y += 8;
+
+        doc.setFontSize(9);
+        doc.setTextColor(0, 0, 0);
+        doc.text(`SHA256: ${hashes.sha256}`, margin, y);
+        y += 6;
+        doc.text(`SHA1: ${hashes.sha1}`, margin, y);
+        y += 6;
+        doc.text(`MD5: ${hashes.md5}`, margin, y);
+        y += 12;
+
+        // AI Assessment
+        if (backendAnalysis?.ai) {
+            if (y > 250) {
+                doc.addPage();
+                y = 20;
+            }
+
+            doc.setFontSize(14);
+            doc.setTextColor(79, 70, 229);
+            doc.text('AI Assessment', margin, y);
+            y += 8;
+
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
+            doc.text(`Threat Level: ${backendAnalysis.ai.threatLevel.toUpperCase()}`, margin, y);
+            y += 6;
+            doc.text(`Confidence: ${backendAnalysis.ai.confidence}%`, margin, y);
+            y += 8;
+
+            // Summary
+            doc.setFontSize(9);
+            const summaryLines = doc.splitTextToSize(backendAnalysis.ai.summary, maxWidth);
+            doc.text(summaryLines, margin, y);
+            y += (summaryLines.length * 5) + 8;
+
+            // Behaviors
+            if (backendAnalysis.ai.behaviors && backendAnalysis.ai.behaviors.length > 0) {
+                if (y > 250) {
+                    doc.addPage();
+                    y = 20;
+                }
+
+                doc.setFontSize(11);
+                doc.text('Detected Behaviors:', margin, y);
+                y += 6;
+
+                doc.setFontSize(9);
+                backendAnalysis.ai.behaviors.forEach(behavior => {
+                    if (y > 280) {
+                        doc.addPage();
+                        y = 20;
+                    }
+                    doc.text(`• ${behavior}`, margin + 5, y);
+                    y += 5;
+                });
+                y += 6;
+            }
+        }
+
+        // Entropy Analysis
+        if (clientAnalysis?.entropy) {
+            if (y > 250) {
+                doc.addPage();
+                y = 20;
+            }
+
+            doc.setFontSize(14);
+            doc.setTextColor(79, 70, 229);
+            doc.text('Entropy Analysis', margin, y);
+            y += 8;
+
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
+            doc.text(`Overall Entropy: ${clientAnalysis.entropy.overall.toFixed(2)}`, margin, y);
+            y += 6;
+            doc.text(`Packing Detected: ${clientAnalysis.entropy.isPacked ? 'Yes' : 'No'}`, margin, y);
+            y += 6;
+            doc.text(`Confidence: ${clientAnalysis.entropy.packingConfidence}%`, margin, y);
+            y += 12;
+        }
+
+        // String Analysis
+        if (clientAnalysis?.strings) {
+            if (y > 250) {
+                doc.addPage();
+                y = 20;
+            }
+
+            doc.setFontSize(14);
+            doc.setTextColor(79, 70, 229);
+            doc.text('String Analysis', margin, y);
+            y += 8;
+
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
+            doc.text(`Total ASCII Strings: ${clientAnalysis.strings.totalAscii}`, margin, y);
+            y += 6;
+            doc.text(`Total Unicode Strings: ${clientAnalysis.strings.totalUnicode}`, margin, y);
+            y += 6;
+            doc.text(`Suspicious Strings: ${clientAnalysis.strings.totalSuspicious}`, margin, y);
+            y += 12;
+        }
+
+        // YARA Matches
+        if (backendAnalysis?.yara?.matches && backendAnalysis.yara.matches.length > 0) {
+            if (y > 250) {
+                doc.addPage();
+                y = 20;
+            }
+
+            doc.setFontSize(14);
+            doc.setTextColor(79, 70, 229);
+            doc.text('YARA Matches', margin, y);
+            y += 8;
+
+            doc.setFontSize(10);
+            backendAnalysis.yara.matches.forEach(match => {
+                if (y > 270) {
+                    doc.addPage();
+                    y = 20;
+                }
+
+                doc.setTextColor(220, 38, 38);
+                doc.text(match.rule, margin, y);
+                y += 6;
+
+                doc.setTextColor(0, 0, 0);
+                doc.setFontSize(9);
+                const descLines = doc.splitTextToSize(match.description, maxWidth);
+                doc.text(descLines, margin, y);
+                y += (descLines.length * 5) + 4;
+
+                doc.text(`Tags: ${match.tags.join(', ')}`, margin, y);
+                y += 10;
+            });
+        }
+
+        // Footer
+        const pageCount = doc.internal.getNumberOfPages();
+        for (let i = 1; i <= pageCount; i++) {
+            doc.setPage(i);
+            doc.setFontSize(8);
+            doc.setTextColor(156, 163, 175);
+            doc.text(
+                `Page ${i} of ${pageCount} | Generated by Malware Analysis Tool`,
+                pageWidth / 2,
+                doc.internal.pageSize.getHeight() - 10,
+                { align: 'center' }
+            );
+        }
+
+        return doc;
     }
 
     static generateTextReport(analysisData) {
