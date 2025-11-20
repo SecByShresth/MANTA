@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - Malware Analysis Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: white;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: #6366f1;
+            margin-bottom: 1rem;
+            border-bottom: 3px solid #6366f1;
+            padding-bottom: 0.5rem;
+        }
+
+        h2 {
+            color: #4f46e5;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            color: #6b7280;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        ul,
+        ol {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        code {
+            background: #f3f4f6;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background: #1f2937;
+            color: #f9fafb;
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            margin: 0.5rem 0.5rem 0.5rem 0;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .warning {
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        .info {
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        .success {
+            background: #f0fdf4;
+            border-left: 4px solid #10b981;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>📚 Malware Analysis Tool - Documentation</h1>
+
+        <div class="info">
+            <strong>Quick Links:</strong><br>
+            <a href="index.html" class="btn">Launch Tool</a>
+            <a href="https://github.com" class="btn">View on GitHub</a>
+        </div>
+
+        <h2>🎯 Overview</h2>
+        <p>
+            The Malware Analysis Tool is a privacy-focused, AI-powered static analysis platform that runs entirely
+            on GitHub Pages (frontend) and GitHub Actions (backend) with zero databases and fully ephemeral sessions.
+        </p>
+
+        <h2>✨ Key Features</h2>
+        <ul>
+            <li><strong>Client-Side Analysis</strong>: Hash calculation, string extraction, PE parsing, entropy analysis
+            </li>
+            <li><strong>Backend Analysis</strong>: Deep static analysis, YARA scanning, AI assessment (optional)</li>
+            <li><strong>Privacy-First</strong>: No data storage, fully ephemeral sessions</li>
+            <li><strong>Export Options</strong>: JSON, HTML, and text report formats</li>
+            <li><strong>Modern UI</strong>: Clean, responsive design with real-time progress tracking</li>
+        </ul>
+
+        <h2>🚀 Getting Started</h2>
+
+        <h3>Local Testing</h3>
+        <pre><code>python -m http.server 8000
+# Open http://localhost:8000</code></pre>
+
+        <h3>GitHub Pages Deployment</h3>
+        <ol>
+            <li>Fork or clone the repository</li>
+            <li>Push to your GitHub account</li>
+            <li>Enable GitHub Pages in repository settings</li>
+            <li>Access at: <code>https://yourusername.github.io/repo-name/</code></li>
+        </ol>
+
+        <h2>📖 Usage Guide</h2>
+
+        <h3>Step 1: Upload File</h3>
+        <p>Drag and drop a file or click to browse. Supported formats:</p>
+        <ul>
+            <li>Windows executables: .exe, .dll, .msi</li>
+            <li>Scripts: .js, .vbs, .ps1, .bat</li>
+            <li>Archives: .zip</li>
+            <li>Android: .apk</li>
+        </ul>
+
+        <h3>Step 2: Review Preview</h3>
+        <p>After upload, you'll see:</p>
+        <ul>
+            <li>File name, size, and type</li>
+            <li>SHA256 hash (calculated instantly)</li>
+            <li>Analyze button to start analysis</li>
+        </ul>
+
+        <h3>Step 3: Analyze</h3>
+        <p>Click "Analyze File" to start the analysis process:</p>
+        <ol>
+            <li><strong>Client-Side Analysis</strong>: Hashes, strings, entropy, PE parsing</li>
+            <li><strong>Upload to Backend</strong>: (Optional) Send to GitHub Actions</li>
+            <li><strong>Deep Analysis</strong>: YARA scanning, advanced detection</li>
+            <li><strong>AI Assessment</strong>: Threat level evaluation</li>
+        </ol>
+
+        <h3>Step 4: Review Results</h3>
+        <p>Navigate through tabs to view different aspects:</p>
+        <ul>
+            <li><strong>Overview</strong>: File info and hashes</li>
+            <li><strong>AI Summary</strong>: Threat level and recommendations</li>
+            <li><strong>Static Analysis</strong>: PE structure (for executables)</li>
+            <li><strong>Strings</strong>: Extracted strings with suspicious highlighting</li>
+            <li><strong>Entropy</strong>: Visual chart and packing detection</li>
+            <li><strong>YARA Matches</strong>: Pattern detection results</li>
+        </ul>
+
+        <h3>Step 5: Export</h3>
+        <p>Download reports in your preferred format:</p>
+        <ul>
+            <li><strong>JSON</strong>: Machine-readable, complete data</li>
+            <li><strong>HTML</strong>: Standalone report with styling</li>
+            <li><strong>Text</strong>: Simple text format</li>
+        </ul>
+
+        <h2>⚙️ Configuration</h2>
+
+        <h3>Enable Backend Analysis</h3>
+        <div class="info">
+            <p><strong>Note:</strong> Backend analysis is optional. The tool works fully without it.</p>
+        </div>
+
+        <p>To enable GitHub Actions backend:</p>
+        <ol>
+            <li>Create a GitHub Personal Access Token with <code>repo</code> and <code>workflow</code> scopes</li>
+            <li>Configure via browser console:
+                <pre><code>localStorage.setItem('gh_owner', 'YOUR_USERNAME');
+localStorage.setItem('gh_repo', 'YOUR_REPO');
+localStorage.setItem('gh_token', 'YOUR_TOKEN');</code></pre>
+            </li>
+            <li>Refresh the page</li>
+        </ol>
+
+        <h2>🔒 Security & Privacy</h2>
+
+        <div class="warning">
+            <strong>⚠️ Important Security Notes:</strong>
+            <ul style="margin-top: 0.5rem;">
+                <li>This tool is for <strong>static analysis only</strong> - never execute suspicious files</li>
+                <li>Always work in an <strong>isolated environment</strong> when handling malware</li>
+                <li>Don't upload sensitive or confidential files</li>
+                <li>Backend analysis sends data to GitHub Actions (ephemeral, but transmitted)</li>
+            </ul>
+        </div>
+
+        <h3>Privacy Guarantees</h3>
+        <ul>
+            <li>✅ No databases - all processing is ephemeral</li>
+            <li>✅ No persistent storage - data exists only in memory</li>
+            <li>✅ No tracking - we don't collect user data</li>
+            <li>✅ No artifacts - GitHub Actions deletes files immediately</li>
+            <li>✅ Session-only - refresh page to clear everything</li>
+        </ul>
+
+        <h2>🎨 Understanding the Analysis</h2>
+
+        <h3>Hash Values</h3>
+        <p>
+            Cryptographic hashes uniquely identify files. Use them to:
+        </p>
+        <ul>
+            <li>Search on VirusTotal or other threat intelligence platforms</li>
+            <li>Verify file integrity</li>
+            <li>Track malware samples</li>
+        </ul>
+
+        <h3>Entropy Analysis</h3>
+        <p>Entropy measures randomness in data:</p>
+        <ul>
+            <li><strong>0-4</strong>: Highly structured (normal code/text)</li>
+            <li><strong>4-6</strong>: Normal executable data</li>
+            <li><strong>6-7</strong>: Compressed or mixed data</li>
+            <li><strong>7-8</strong>: Likely encrypted or packed</li>
+        </ul>
+        <p>High entropy (>7.0) often indicates packing or encryption, common in malware.</p>
+
+        <h3>String Analysis</h3>
+        <p>Extracted strings can reveal:</p>
+        <ul>
+            <li>URLs and IP addresses (C2 servers)</li>
+            <li>File paths (persistence locations)</li>
+            <li>API calls (malicious behavior)</li>
+            <li>Registry keys (system modifications)</li>
+        </ul>
+
+        <h3>PE Structure</h3>
+        <p>For Windows executables, PE analysis shows:</p>
+        <ul>
+            <li><strong>Sections</strong>: Code, data, resources</li>
+            <li><strong>Imports</strong>: External functions used</li>
+            <li><strong>Characteristics</strong>: File properties</li>
+            <li><strong>Timestamp</strong>: Compilation date</li>
+        </ul>
+
+        <h3>AI Assessment</h3>
+        <p>The AI model evaluates:</p>
+        <ul>
+            <li><strong>Threat Level</strong>: Low, Medium, High</li>
+            <li><strong>Behaviors</strong>: Suspicious activities detected</li>
+            <li><strong>Confidence</strong>: How certain the assessment is</li>
+            <li><strong>Recommendations</strong>: Next steps for analysis</li>
+        </ul>
+
+        <h2>🛠️ Customization</h2>
+
+        <h3>Adding Custom Patterns</h3>
+        <p>Edit <code>js/strings-extractor.js</code> to add custom suspicious patterns:</p>
+        <pre><code>const suspiciousPatterns = [
+    /your-pattern-here/i,
+    /another-pattern/i
+];</code></pre>
+
+        <h3>Modifying UI Colors</h3>
+        <p>Edit <code>styles.css</code> CSS variables:</p>
+        <pre><code>:root {
+    --primary-color: #6366f1;
+    --secondary-color: #8b5cf6;
+}</code></pre>
+
+        <h3>Extending Analysis</h3>
+        <p>Add custom analysis in <code>js/main.js</code>:</p>
+        <pre><code>async performCustomAnalysis() {
+    // Your custom analysis code
+}</code></pre>
+
+        <h2>🐛 Troubleshooting</h2>
+
+        <h3>Common Issues</h3>
+
+        <p><strong>Q: Hashes not calculating</strong></p>
+        <p>A: Ensure you're using a modern browser with Web Crypto API support (Chrome, Firefox, Edge, Safari).</p>
+
+        <p><strong>Q: PE parsing fails</strong></p>
+        <p>A: PE parsing only works for valid Windows executables (.exe, .dll). Other file types will skip this step.
+        </p>
+
+        <p><strong>Q: Backend analysis not working</strong></p>
+        <p>A: Check that:</p>
+        <ul>
+            <li>GitHub token is valid and has correct permissions</li>
+            <li>Workflow file exists in <code>.github/workflows/</code></li>
+            <li>Repository has GitHub Actions enabled</li>
+            <li>Check the Actions tab in your repository for errors</li>
+        </ul>
+
+        <p><strong>Q: Page not loading on GitHub Pages</strong></p>
+        <p>A: Wait 2-3 minutes after enabling Pages. Verify repository is public or token has access.</p>
+
+        <h2>📊 Technical Details</h2>
+
+        <h3>Architecture</h3>
+        <ul>
+            <li><strong>Frontend</strong>: Pure HTML/CSS/JavaScript (no frameworks)</li>
+            <li><strong>Backend</strong>: GitHub Actions (Python-based)</li>
+            <li><strong>Storage</strong>: None (fully ephemeral)</li>
+            <li><strong>APIs</strong>: GitHub REST API for workflow dispatch</li>
+        </ul>
+
+        <h3>Browser Compatibility</h3>
+        <ul>
+            <li>Chrome/Edge: ✅ Full support</li>
+            <li>Firefox: ✅ Full support</li>
+            <li>Safari: ✅ Full support</li>
+            <li>IE11: ❌ Not supported</li>
+        </ul>
+
+        <h3>Performance</h3>
+        <ul>
+            <li>Client-side analysis: ~1-5 seconds (depends on file size)</li>
+            <li>Backend analysis: ~5-30 seconds (depends on complexity)</li>
+            <li>Maximum file size: Limited by browser memory (~100MB practical limit)</li>
+        </ul>
+
+        <h2>🤝 Contributing</h2>
+        <p>Contributions are welcome! Areas for improvement:</p>
+        <ul>
+            <li>Add support for more file formats (ELF, Mach-O)</li>
+            <li>Implement advanced PE parsing (imports, exports, resources)</li>
+            <li>Integrate additional AI models</li>
+            <li>Improve UI/UX</li>
+            <li>Add more YARA rules</li>
+            <li>Enhance entropy visualization</li>
+        </ul>
+
+        <h2>📝 License</h2>
+        <p>MIT License - Free to use, modify, and distribute.</p>
+
+        <div class="success">
+            <strong>✅ Ready to start?</strong><br>
+            <a href="index.html" class="btn">Launch Malware Analysis Tool</a>
+        </div>
+
+        <hr style="margin: 2rem 0; border: none; border-top: 2px solid #e5e7eb;">
+
+        <p style="text-align: center; color: #6b7280; font-size: 0.875rem;">
+            Made with ❤️ for the security community<br>
+            Privacy-First • AI-Powered • Fully Ephemeral
+        </p>
+    </div>
+</body>
+
+</html>
