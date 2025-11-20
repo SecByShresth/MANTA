@@ -13,6 +13,178 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .ai-method-explainer {
+            margin: 2rem 0;
+            padding: 0;
+        }
+
+        .explainer-container {
+            background: linear-gradient(135deg, #f0f4ff 0%, #f8f5ff 100%);
+            border: 1px solid #d4c5f9;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .explainer-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            cursor: pointer;
+            background: rgba(99, 102, 241, 0.05);
+            border-bottom: 1px solid #d4c5f9;
+            transition: background 0.2s;
+        }
+
+        .explainer-header:hover {
+            background: rgba(99, 102, 241, 0.08);
+        }
+
+        .explainer-icon {
+            color: #6366f1;
+            flex-shrink: 0;
+        }
+
+        .explainer-header h3 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1f2937;
+            flex: 1;
+        }
+
+        .explainer-toggle {
+            background: none;
+            border: none;
+            color: #6366f1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            padding: 0;
+            transition: transform 0.3s;
+        }
+
+        .explainer-toggle.collapsed {
+            transform: rotate(-90deg);
+        }
+
+        .explainer-content {
+            padding: 24px 20px;
+            max-height: 2000px;
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.3s ease;
+            opacity: 1;
+        }
+
+        .explainer-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+            padding: 0 20px;
+        }
+
+        .analysis-method {
+            background: white;
+            border: 2px solid #6366f1;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.02) 0%, rgba(139, 92, 246, 0.02) 100%);
+        }
+
+        .analysis-method h4 {
+            margin: 0 0 8px 0;
+            font-size: 1.1rem;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .method-description {
+            margin: 0 0 20px 0;
+            font-size: 0.9rem;
+            color: #6b7280;
+            line-height: 1.5;
+        }
+
+        .method-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .detail-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #374151;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-item ul {
+            margin: 0;
+            padding-left: 20px;
+            font-size: 0.875rem;
+            color: #4b5563;
+            line-height: 1.7;
+        }
+
+        .detail-item ul li {
+            margin-bottom: 6px;
+        }
+
+        .confidence-note {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            background: white;
+            border-left: 4px solid #6366f1;
+            padding: 16px;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            color: #374151;
+            margin-top: 20px;
+            line-height: 1.6;
+        }
+
+        .confidence-note svg {
+            color: #6366f1;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .confidence-note strong {
+            color: #1f2937;
+        }
+
+        @media (max-width: 768px) {
+            .method-details {
+                grid-template-columns: 1fr;
+            }
+
+            .explainer-header {
+                padding: 14px 16px;
+            }
+
+            .explainer-content {
+                padding: 16px;
+            }
+
+            .analysis-method {
+                padding: 16px;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -96,6 +268,69 @@
                     <div class="info-icon">⚡</div>
                     <h3>Fast Analysis</h3>
                     <p>Client-side pre-analysis with serverless backend processing.</p>
+                </div>
+            </div>
+
+            <!-- AI Analysis Method Explainer -->
+            <div class="ai-method-explainer">
+                <div class="explainer-container">
+                    <div class="explainer-header">
+                        <svg class="explainer-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                            <path d="M12 8V12M12 16H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        <h3>How Our AI Analysis Works</h3>
+                        <button class="explainer-toggle" id="toggle-explainer" aria-label="Toggle details">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M7 8L10 11L13 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="explainer-content" id="explainer-content">
+                        <div class="analysis-method">
+                            <h4>✅ Client-Side AI Analysis</h4>
+                            <p class="method-description">Your analysis runs 100% in your browser using intelligent heuristics and advanced pattern detection.</p>
+                            
+                            <div class="method-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">📊 How It Works</span>
+                                    <ul>
+                                        <li>Entropy analysis (detects encrypted/packed files)</li>
+                                        <li>Suspicious string detection</li>
+                                        <li>File structure evaluation</li>
+                                        <li>Heuristic-based threat scoring</li>
+                                    </ul>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">✨ Key Advantages</span>
+                                    <ul>
+                                        <li>⚡ Instant results (1-2 seconds)</li>
+                                        <li>🔒 100% private (nothing leaves your device)</li>
+                                        <li>💰 Completely free</li>
+                                        <li>🌐 Works offline</li>
+                                    </ul>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">🎯 What It Detects</span>
+                                    <ul>
+                                        <li>High entropy indicating encryption/packing</li>
+                                        <li>Malicious API calls and patterns</li>
+                                        <li>Suspicious registry/file operations</li>
+                                        <li>Known malware signatures</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="confidence-note">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+                                <path d="M8 5V9M8 12H8.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            </svg>
+                            <p><strong>Why This Matters:</strong> Our client-side analysis is highly effective for initial threat assessment. It successfully detects encrypted files, suspicious patterns, and provides actionable recommendations without compromising your privacy.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -252,6 +487,20 @@
     <script src="js/github-actions.js"></script>
     <script src="js/report-generator.js"></script>
     <script src="js/main.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggle = document.getElementById('toggle-explainer');
+            const content = document.getElementById('explainer-content');
+
+            if (toggle && content) {
+                toggle.addEventListener('click', function() {
+                    content.classList.toggle('collapsed');
+                    toggle.classList.toggle('collapsed');
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>
