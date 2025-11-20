@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malware Analysis Tool - AI-Powered Static Analysis</title>
+    <meta name="description" content="Privacy-focused, AI-powered malware static analysis tool. Fully ephemeral with no data persistence.">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="32" height="32" rx="8" fill="url(#gradient)"/>
+                    <path d="M16 8L22 12V20L16 24L10 20V12L16 8Z" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="32" y2="32">
+                            <stop offset="0%" stop-color="#6366f1"/>
+                            <stop offset="100%" stop-color="#8b5cf6"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <h1>Malware Analysis Tool</h1>
+            </div>
+            <div class="header-info">
+                <span class="badge">AI-Powered</span>
+                <span class="badge">Ephemeral</span>
+                <span class="badge">Privacy-First</span>
+            </div>
+        </header>
+
+        <!-- Upload Section -->
+        <section id="upload-section" class="section">
+            <div class="upload-card">
+                <div class="upload-area" id="upload-area">
+                    <svg class="upload-icon" width="64" height="64" viewBox="0 0 64 64" fill="none">
+                        <circle cx="32" cy="32" r="30" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4"/>
+                        <path d="M32 20V44M20 32H44" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                    </svg>
+                    <h2>Drop your file here</h2>
+                    <p>or click to browse</p>
+                    <p class="supported-formats">Supported: .exe, .dll, .msi, .zip, .js, .vbs, .ps1, .apk</p>
+                    <input type="file" id="file-input" accept=".exe,.dll,.msi,.zip,.js,.vbs,.ps1,.apk" hidden>
+                </div>
+                
+                <div id="file-preview" class="file-preview hidden">
+                    <div class="file-info">
+                        <div class="file-icon">📄</div>
+                        <div class="file-details">
+                            <h3 id="file-name"></h3>
+                            <div class="file-meta">
+                                <span id="file-size"></span>
+                                <span id="file-type"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hash-preview">
+                        <div class="hash-item">
+                            <label>SHA256:</label>
+                            <code id="sha256-hash">Calculating...</code>
+                        </div>
+                    </div>
+                    <button id="analyze-btn" class="btn-primary">
+                        <span>Analyze File</span>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M5 10H15M15 10L10 5M15 10L10 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="info-cards">
+                <div class="info-card">
+                    <div class="info-icon">🔒</div>
+                    <h3>Privacy First</h3>
+                    <p>No data stored. Everything is ephemeral and exists only in memory.</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">🤖</div>
+                    <h3>AI-Powered</h3>
+                    <p>Advanced AI analysis for threat detection and behavior assessment.</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">⚡</div>
+                    <h3>Fast Analysis</h3>
+                    <p>Client-side pre-analysis with serverless backend processing.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Analysis Progress -->
+        <section id="progress-section" class="section hidden">
+            <div class="progress-card">
+                <h2>Analyzing File</h2>
+                <div class="progress-steps">
+                    <div class="progress-step active" data-step="client">
+                        <div class="step-icon">1</div>
+                        <div class="step-content">
+                            <h3>Client-Side Analysis</h3>
+                            <p id="client-status">Calculating hashes and extracting metadata...</p>
+                        </div>
+                    </div>
+                    <div class="progress-step" data-step="upload">
+                        <div class="step-icon">2</div>
+                        <div class="step-content">
+                            <h3>Uploading to GitHub Actions</h3>
+                            <p id="upload-status">Waiting...</p>
+                        </div>
+                    </div>
+                    <div class="progress-step" data-step="backend">
+                        <div class="step-icon">3</div>
+                        <div class="step-content">
+                            <h3>Deep Analysis</h3>
+                            <p id="backend-status">Waiting...</p>
+                        </div>
+                    </div>
+                    <div class="progress-step" data-step="ai">
+                        <div class="step-icon">4</div>
+                        <div class="step-content">
+                            <h3>AI Assessment</h3>
+                            <p id="ai-status">Waiting...</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section id="results-section" class="section hidden">
+            <div class="results-header">
+                <h2>Analysis Report</h2>
+                <div class="export-buttons">
+                    <button class="btn-secondary" id="export-json">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M8 2V10M8 10L5 7M8 10L11 7M2 14H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                        JSON
+                    </button>
+                    <button class="btn-secondary" id="export-pdf">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M8 2V10M8 10L5 7M8 10L11 7M2 14H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                        PDF
+                    </button>
+                    <button class="btn-secondary" id="export-html">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M8 2V10M8 10L5 7M8 10L11 7M2 14H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                        HTML
+                    </button>
+                </div>
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" data-tab="overview">Overview</button>
+                <button class="tab" data-tab="ai-summary">AI Summary</button>
+                <button class="tab" data-tab="static">Static Analysis</button>
+                <button class="tab" data-tab="strings">Strings</button>
+                <button class="tab" data-tab="entropy">Entropy</button>
+                <button class="tab" data-tab="yara">YARA Matches</button>
+            </div>
+
+            <div class="tab-content active" id="overview-tab">
+                <div class="overview-grid">
+                    <div class="overview-card">
+                        <h3>File Information</h3>
+                        <div class="info-grid" id="file-info-grid"></div>
+                    </div>
+                    <div class="overview-card">
+                        <h3>Hashes</h3>
+                        <div class="info-grid" id="hashes-grid"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="ai-summary-tab">
+                <div class="ai-summary-card">
+                    <div class="threat-level" id="threat-level">
+                        <div class="threat-badge"></div>
+                        <h3>Threat Level: <span id="threat-level-text">Unknown</span></h3>
+                    </div>
+                    <div class="ai-content" id="ai-content"></div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="static-tab">
+                <div class="static-analysis-card" id="static-analysis-content"></div>
+            </div>
+
+            <div class="tab-content" id="strings-tab">
+                <div class="strings-card">
+                    <div class="strings-filter">
+                        <input type="text" id="strings-search" placeholder="Search strings...">
+                        <select id="strings-type">
+                            <option value="all">All Strings</option>
+                            <option value="ascii">ASCII Only</option>
+                            <option value="unicode">Unicode Only</option>
+                            <option value="suspicious">Suspicious Only</option>
+                        </select>
+                    </div>
+                    <div class="strings-list" id="strings-list"></div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="entropy-tab">
+                <div class="entropy-card">
+                    <canvas id="entropy-chart"></canvas>
+                    <div class="entropy-info" id="entropy-info"></div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="yara-tab">
+                <div class="yara-card" id="yara-content"></div>
+            </div>
+
+            <button class="btn-reset" id="reset-btn">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M2 8C2 4.68629 4.68629 2 8 2C11.3137 2 14 4.68629 14 8C14 11.3137 11.3137 14 8 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <path d="M2 8L4 6M2 8L4 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                Analyze Another File
+            </button>
+        </section>
+    </div>
+
+    <script src="js/crypto-utils.js"></script>
+    <script src="js/pe-parser.js"></script>
+    <script src="js/strings-extractor.js"></script>
+    <script src="js/entropy-calculator.js"></script>
+    <script src="js/github-actions.js"></script>
+    <script src="js/report-generator.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

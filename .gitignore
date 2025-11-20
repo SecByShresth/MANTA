@@ -1,0 +1,67 @@
+# .gitignore for Malware Analysis Tool
+
+# OS Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependencies (if you add any build tools later)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Test files and samples
+test-samples/
+*.exe
+*.dll
+*.msi
+*.apk
+*.zip
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Environment variables
+.env
+.env.local
+
+# Build outputs (if you add build process)
+dist/
+build/
+
+# Python (for GitHub Actions development)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+
+# Analysis outputs (should not be committed)
+reports/
+analysis-results/
+
+# Secrets (NEVER commit these)
+secrets.json
+config.local.json
+*.pem
+*.key
+
+# GitHub Actions logs (local testing)
+.github/workflows/*.log
