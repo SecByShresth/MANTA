@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Favicon Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #6366f1;
+        }
+
+        canvas {
+            border: 2px solid #e5e7eb;
+            margin: 20px 0;
+            image-rendering: pixelated;
+        }
+
+        button {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+        }
+
+        .preview {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .size-label {
+            font-weight: 600;
+            color: #6b7280;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🎨 Favicon Generator for Malware Analysis Tool</h1>
+        <p>This page helps you create favicon files from the SVG. The SVG will be rendered at different sizes.</p>
+
+        <h2>Preview</h2>
+        <div class="preview">
+            <div>
+                <div class="size-label">16x16 (favicon.ico)</div>
+                <canvas id="canvas16" width="16" height="16"></canvas>
+            </div>
+            <div>
+                <div class="size-label">32x32</div>
+                <canvas id="canvas32" width="32" height="32"></canvas>
+            </div>
+            <div>
+                <div class="size-label">48x48</div>
+                <canvas id="canvas48" width="48" height="48"></canvas>
+            </div>
+        </div>
+
+        <h2>Download</h2>
+        <button onclick="downloadPNG(16)">Download 16x16 PNG</button>
+        <button onclick="downloadPNG(32)">Download 32x32 PNG</button>
+        <button onclick="downloadPNG(48)">Download 48x48 PNG</button>
+
+        <h2>Instructions</h2>
+        <ol>
+            <li>Download the PNG files above</li>
+            <li>Use an online converter like <a href="https://www.favicon-generator.org/"
+                    target="_blank">favicon-generator.org</a> or <a href="https://convertio.co/png-ico/"
+                    target="_blank">convertio.co</a></li>
+            <li>Upload the 32x32 PNG and convert to .ico format</li>
+            <li>Save as <code>favicon.ico</code> in your project root</li>
+            <li>The favicon is already linked in index.html!</li>
+        </ol>
+
+        <p
+            style="margin-top: 30px; padding: 15px; background: #eff6ff; border-left: 4px solid #3b82f6; border-radius: 4px;">
+            <strong>💡 Tip:</strong> Modern browsers support SVG favicons directly, but .ico format provides better
+            compatibility with older browsers and Windows.
+        </p>
+    </div>
+
+    <script>
+        // SVG content
+        const svgContent = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <defs>
+    <linearGradient id="shieldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <circle cx="16" cy="16" r="15" fill="url(#shieldGradient)"/>
+  <path d="M16 4 L24 8 L24 16 C24 21 20 25 16 28 C12 25 8 21 8 16 L8 8 Z" 
+        fill="white" opacity="0.95"/>
+  <circle cx="14" cy="14" r="4" fill="none" stroke="url(#shieldGradient)" stroke-width="1.5"/>
+  <line x1="17" y1="17" x2="20" y2="20" stroke="url(#shieldGradient)" stroke-width="1.5" stroke-linecap="round"/>
+  <text x="16" y="24" font-family="monospace" font-size="4" fill="url(#shieldGradient)" opacity="0.3" text-anchor="middle">101</text>
+</svg>`;
+
+        function renderSVG(size) {
+            const canvas = document.getElementById(`canvas${size}`);
+            const ctx = canvas.getContext('2d');
+
+            const img = new Image();
+            const blob = new Blob([svgContent], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(blob);
+
+            img.onload = function () {
+                ctx.clearRect(0, 0, size, size);
+                ctx.drawImage(img, 0, 0, size, size);
+                URL.revokeObjectURL(url);
+            };
+
+            img.src = url;
+        }
+
+        function downloadPNG(size) {
+            const canvas = document.getElementById(`canvas${size}`);
+            const link = document.createElement('a');
+            link.download = `favicon-${size}x${size}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        // Render all sizes on load
+        window.onload = function () {
+            renderSVG(16);
+            renderSVG(32);
+            renderSVG(48);
+        };
+    </script>
+</body>
+
+</html>
