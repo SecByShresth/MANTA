@@ -121,7 +121,15 @@ class MalwareAnalyzer {
 
             // Step 2: Upload to GitHub Actions (if configured)
             if (this.githubActions) {
-                await this.performBackendAnalysis();
+                try {
+                    await this.performBackendAnalysis();
+                } catch (backendError) {
+                    console.warn('Backend analysis failed:', backendError);
+                    // Gracefully fall back to client-side only
+                    this.updateProgress('upload', 'completed', 'Backend unavailable - using client-side only');
+                    this.updateProgress('backend', 'completed', 'Skipped (authentication failed)');
+                    this.updateProgress('ai', 'completed', 'Using client-side AI analysis');
+                }
             } else {
                 // Skip backend analysis if not configured
                 this.updateProgress('upload', 'completed', 'Skipped (not configured)');
