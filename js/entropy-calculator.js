@@ -43,30 +43,45 @@ class EntropyCalculator {
     }
 
     static analyze(arrayBuffer) {
+        // Limit analysis for very large files
+        const MAX_SECTIONS = 500; // Limit to 500 sections max
+        const fileSize = arrayBuffer.byteLength;
+
+        // Adjust section size based on file size to limit total sections
+        let sectionSize = 1024; // Default 1KB sections
+        const estimatedSections = Math.ceil(fileSize / sectionSize);
+
+        if (estimatedSections > MAX_SECTIONS) {
+            sectionSize = Math.ceil(fileSize / MAX_SECTIONS);
+        }
+
         const overallEntropy = this.calculate(arrayBuffer);
-        const sections = this.calculateBySection(arrayBuffer);
+        const sections = this.calculateBySection(arrayBuffer, sectionSize);
+
+        // Limit sections array to prevent memory issues
+        const limitedSections = sections.slice(0, MAX_SECTIONS);
 
         // Calculate statistics
-        const entropies = sections.map(s => s.entropy);
+        const entropies = limitedSections.map(s => s.entropy);
         const avgEntropy = entropies.reduce((a, b) => a + b, 0) / entropies.length;
         const maxEntropy = Math.max(...entropies);
         const minEntropy = Math.min(...entropies);
 
         // Find high entropy sections (possible encryption/packing)
-        const highEntropySections = sections.filter(s => s.entropy > 7.0);
+        const highEntropySections = limitedSections.filter(s => s.entropy > 7.0);
 
         // Determine if file is likely packed/encrypted
-        const isPacked = overallEntropy > 7.2 || highEntropySections.length > sections.length * 0.3;
+        const isPacked = overallEntropy > 7.2 || highEntropySections.length > limitedSections.length * 0.3;
 
         return {
             overall: overallEntropy,
             average: avgEntropy,
             max: maxEntropy,
             min: minEntropy,
-            sections: sections,
+            sections: limitedSections,
             highEntropySections: highEntropySections,
             isPacked: isPacked,
-            packingConfidence: this.calculatePackingConfidence(overallEntropy, highEntropySections.length, sections.length)
+            packingConfidence: this.calculatePackingConfidence(overallEntropy, highEntropySections.length, limitedSections.length)
         };
     }
 

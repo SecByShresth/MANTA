@@ -1,16 +1,23 @@
 // String extraction from binary files
 class StringsExtractor {
     static extract(arrayBuffer, minLength = 4) {
-        const data = new Uint8Array(arrayBuffer);
+        // Limit string extraction to first 10MB for performance
+        const MAX_EXTRACT_SIZE = 10 * 1024 * 1024; // 10MB
+        const extractSize = Math.min(arrayBuffer.byteLength, MAX_EXTRACT_SIZE);
+
+        const data = new Uint8Array(arrayBuffer, 0, extractSize);
         const strings = {
             ascii: [],
             unicode: [],
             suspicious: []
         };
 
+        // Limit total strings to prevent memory issues
+        const MAX_STRINGS = 5000;
+
         // Extract ASCII strings
         let currentString = '';
-        for (let i = 0; i < data.length; i++) {
+        for (let i = 0; i < data.length && strings.ascii.length < MAX_STRINGS; i++) {
             const byte = data[i];
             if (byte >= 32 && byte <= 126) {
                 currentString += String.fromCharCode(byte);
@@ -27,7 +34,7 @@ class StringsExtractor {
 
         // Extract Unicode strings (UTF-16LE)
         currentString = '';
-        for (let i = 0; i < data.length - 1; i += 2) {
+        for (let i = 0; i < data.length - 1 && strings.unicode.length < MAX_STRINGS; i += 2) {
             const byte1 = data[i];
             const byte2 = data[i + 1];
 

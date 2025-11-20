@@ -71,6 +71,14 @@ class MalwareAnalyzer {
     }
 
     async handleFileSelect(file) {
+        // File size limit: 50MB for client-side analysis
+        const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+
+        if (file.size > MAX_FILE_SIZE) {
+            alert(`File too large! Maximum size is 50MB.\nYour file: ${ReportGenerator.formatBytes(file.size)}\n\nFor larger files, use backend analysis only.`);
+            return;
+        }
+
         this.currentFile = file;
 
         // Update UI
@@ -80,8 +88,13 @@ class MalwareAnalyzer {
 
         // Calculate SHA256 hash
         document.getElementById('sha256-hash').textContent = 'Calculating...';
-        const sha256 = await CryptoUtils.calculateSHA256(file);
-        document.getElementById('sha256-hash').textContent = sha256;
+        try {
+            const sha256 = await CryptoUtils.calculateSHA256(file);
+            document.getElementById('sha256-hash').textContent = sha256;
+        } catch (error) {
+            console.error('Hash calculation error:', error);
+            document.getElementById('sha256-hash').textContent = 'Error calculating hash';
+        }
 
         // Show file preview
         document.querySelector('.upload-area').style.display = 'none';
@@ -90,6 +103,13 @@ class MalwareAnalyzer {
 
     async startAnalysis() {
         if (!this.currentFile) return;
+
+        // File size check
+        const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+        if (this.currentFile.size > MAX_FILE_SIZE) {
+            alert('File too large for client-side analysis. Maximum size: 50MB');
+            return;
+        }
 
         // Hide upload section, show progress
         document.getElementById('upload-section').classList.add('hidden');
