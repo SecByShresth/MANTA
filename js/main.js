@@ -276,7 +276,40 @@ class MalwareAnalyzer {
         const ai = this.analysisData.backendAnalysis?.ai;
 
         if (!ai) {
-            document.getElementById('ai-content').innerHTML = '<p>AI analysis not available (backend not configured)</p>';
+            // Generate client-side AI analysis based on entropy and strings
+            const clientAI = this.generateClientSideAI();
+
+            const threatLevel = document.getElementById('threat-level');
+            threatLevel.className = `threat-level ${clientAI.threatLevel}`;
+            document.getElementById('threat-level-text').textContent = clientAI.threatLevel.toUpperCase();
+
+            const aiContent = document.getElementById('ai-content');
+            aiContent.innerHTML = `
+                <div class="ai-section">
+                    <p style="background: #eff6ff; padding: 12px; border-radius: 6px; border-left: 4px solid #3b82f6; margin-bottom: 16px;">
+                        <strong>ℹ️ Client-Side Analysis</strong><br>
+                        Backend AI not configured. Using client-side heuristics for threat assessment.
+                    </p>
+                    <h4>Summary</h4>
+                    <p>${clientAI.summary}</p>
+                </div>
+                <div class="ai-section">
+                    <h4>Detected Behaviors</h4>
+                    <ul>
+                        ${clientAI.behaviors.map(b => `<li>${b}</li>`).join('')}
+                    </ul>
+                </div>
+                <div class="ai-section">
+                    <h4>Recommendations</h4>
+                    <ul>
+                        ${clientAI.recommendations.map(r => `<li>${r}</li>`).join('')}
+                    </ul>
+                </div>
+                <div class="ai-section">
+                    <h4>Confidence Score</h4>
+                    <p>${clientAI.confidence}%</p>
+                </div>
+            `;
             return;
         }
 
@@ -307,6 +340,82 @@ class MalwareAnalyzer {
                 <p>${ai.confidence}%</p>
             </div>
         `;
+    }
+
+    generateClientSideAI() {
+        const entropy = this.analysisData.clientAnalysis.entropy;
+        const strings = this.analysisData.clientAnalysis.strings;
+        const fileSize = this.analysisData.fileInfo.size;
+
+        let threatLevel = 'low';
+        let behaviors = [];
+        let recommendations = [];
+        let confidence = 70;
+        let summary = '';
+
+        // Analyze entropy
+        if (entropy.overall > 7.8) {
+            threatLevel = 'high';
+            behaviors.push('Extremely high entropy detected - likely encrypted or packed');
+            behaviors.push(`Packing confidence: ${entropy.packingConfidence}%`);
+            recommendations.push('File appears to be packed/encrypted - execute only in isolated sandbox');
+            recommendations.push('Use unpacking tools before deeper analysis');
+            confidence = 85;
+            summary = 'This file exhibits very high entropy (near maximum randomness), strongly suggesting it is either encrypted, compressed, or packed with a runtime packer. This is a common technique used by malware to evade detection.';
+        } else if (entropy.overall > 7.2) {
+            threatLevel = 'medium';
+            behaviors.push('High entropy detected - possibly packed or compressed');
+            behaviors.push(`${entropy.highEntropySections.length} high-entropy sections found`);
+            recommendations.push('Investigate packing/compression methods');
+            recommendations.push('Monitor for runtime unpacking behavior');
+            confidence = 75;
+            summary = 'The file shows elevated entropy levels, which may indicate compression or packing. While this could be legitimate (e.g., compressed resources), it warrants further investigation.';
+        } else if (entropy.overall > 6.5) {
+            threatLevel = 'low';
+            behaviors.push('Moderate entropy - normal for compiled executables');
+            behaviors.push('No obvious packing detected');
+            recommendations.push('Standard analysis procedures apply');
+            confidence = 70;
+            summary = 'The file exhibits normal entropy levels for a compiled executable. No immediate signs of packing or encryption detected.';
+        } else {
+            threatLevel = 'low';
+            behaviors.push('Low entropy - highly structured data');
+            behaviors.push('Likely plain text or uncompressed data');
+            recommendations.push('File appears to be uncompressed/unencrypted');
+            confidence = 80;
+            summary = 'The file shows low entropy, indicating highly structured or plain text data. This is typical for scripts, configuration files, or uncompressed executables.';
+        }
+
+        // Analyze suspicious strings
+        if (strings.totalSuspicious > 10) {
+            threatLevel = threatLevel === 'low' ? 'medium' : 'high';
+            behaviors.push(`${strings.totalSuspicious} suspicious strings detected`);
+            recommendations.push('Review suspicious strings for malicious indicators');
+            confidence += 10;
+        } else if (strings.totalSuspicious > 5) {
+            behaviors.push(`${strings.totalSuspicious} potentially suspicious strings found`);
+        }
+
+        // File size analysis
+        if (fileSize < 10000) {
+            behaviors.push('Small file size - could be a dropper or script');
+        } else if (fileSize > 10000000) {
+            behaviors.push('Large file size - may contain embedded resources');
+        }
+
+        // Add general recommendations
+        if (!recommendations.includes('File appears to be uncompressed/unencrypted')) {
+            recommendations.push('Always analyze files in an isolated environment');
+            recommendations.push('Cross-reference hashes with threat intelligence databases');
+        }
+
+        return {
+            threatLevel,
+            behaviors,
+            recommendations,
+            confidence: Math.min(confidence, 95),
+            summary
+        };
     }
 
     renderStaticAnalysis() {
